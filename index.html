@@ -454,27 +454,28 @@
             </div>
         </div>
     </div>
-    <div class="whatsapp-popup" id="whatsapp-popup">
-        <button class="whatsapp-close" onclick="closeWhatsAppPopup()">×</button>
-        <div class="whatsapp-header">
-            <i class="fab fa-whatsapp"></i>
-            <h3>Hubungi Kami</h3>
-        </div>
-        <div class="whatsapp-message">
-            Apakah Anda ingin menghubungi admin kami melalui WhatsApp?
-        </div>
-        <div class="whatsapp-buttons">
-            <button class="whatsapp-btn primary" onclick="confirmWhatsApp()">Ya, Hubungi</button>
-            <button class="whatsapp-btn secondary" onclick="closeWhatsAppPopup()">Nanti Saja</button>
-        </div>
-    </div>
 
-    <!-- Add floating WhatsApp button -->
-    <div class="floating-whatsapp" id="floating-whatsapp" onclick="showWhatsAppPopup()">
-        <i class="fab fa-whatsapp"></i>
     </div>
+    <script type="text/javascript">
+        window.mychat = window.mychat || {};
+        window.mychat.server = 'https://live.cekat.ai/widget.js';
+        window.mychat.iframeWidth = '400px';
+        window.mychat.iframeHeight = '700px';
+        window.mychat.accessKey = 'Terno-5whTF3sw';
+        (function() {
+            var mychat = document.createElement('script');
+            mychat.type = 'text/javascript';
+            mychat.async = true;
+            mychat.src = window.mychat.server;
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(mychat, s);
+        })();
+    </script>
+
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
+    
         function showWhatsAppPopup() {
             document.getElementById('whatsapp-popup').classList.add('show');
         }
