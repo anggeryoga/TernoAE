@@ -43,8 +43,8 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-gray-50">
-    <div class="container mx-auto py-8 px-0 w-full">
+<body class="bg-gray-50">
+    <div class="container mx-auto px-0 w-full">
         <div class="bg-white rounded-xl shadow-elegant overflow-hidden">
             <div class="bg-gradient-to-r from-teal-500 to-emerald-600 text-white py-6 px-6">
                 <h1 class="text-3xl font-bold text-center">Terno AE Ojol Lokal Jawa Tengah</h1>
@@ -146,8 +146,10 @@
         </div>
     </div>
 
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
     
     <script>
         // Konfigurasi Peta
@@ -159,7 +161,7 @@
         // Variabel Global
         let startMarker = null;
         let endMarker = null;
-        let distanceLine = null;
+        let routingControl = null;
         const geocoder = L.Control.Geocoder.nominatim();
 
         function getCurrentLocation(type) {
@@ -201,10 +203,11 @@
             const startInput = document.getElementById('startLocation').value;
             const endInput = document.getElementById('endLocation').value;
 
-            // Reset peta
-            if (startMarker) map.removeLayer(startMarker);
-            if (endMarker) map.removeLayer(endMarker);
-            if (distanceLine) map.removeLayer(distanceLine);
+            // Hapus routing sebelumnya
+            if (routingControl) {
+                map.removeControl(routingControl);
+                routingControl = null;
+            }
 
             // Sembunyikan tombol order
             document.getElementById('orderButton').classList.add('hidden');
@@ -225,35 +228,45 @@
                     }
                     const endLatlng = endResults[0].center;
 
-                    // Marker dan garis
-                    startMarker = L.marker(startLatlng).addTo(map)
-                        .bindPopup(startInput).openPopup();
-                    endMarker = L.marker(endLatlng).addTo(map)
-                        .bindPopup(endInput).openPopup();
-                    
-                    distanceLine = L.polyline([startLatlng, endLatlng], {
-                        color: '#10b981',
-                        weight: 4
+                    // Routing dengan mengikuti jalan
+                    routingControl = L.Routing.control({
+                        waypoints: [
+                            L.latLng(startLatlng),
+                            L.latLng(endLatlng)
+                        ],
+                        routeWhileDragging: false,
+                        showAlternatives: false,
+                        addWaypoints: false,
+                        show: false,
+                        createMarker: function() { return null; },
+                        lineOptions: {
+                            styles: [
+                                {color: '#10b981', opacity: 0.8, weight: 6}
+                            ]
+                        }
                     }).addTo(map);
 
-                    // Hitung jarak
-                    const distance = map.distance(startLatlng, endLatlng) / 1000;
-                    const estimasiWaktu = (distance / 30 * 60).toFixed(0); // Asumsi kecepatan 30 km/jam
-                    const hargaPerKm = 2500;
-                    const totalHarga = (distance * hargaPerKm).toFixed(0);
+                    // Hitung jarak dan estimasi
+                    routingControl.on('routesfound', function(e) {
+                        const routes = e.routes;
+                        const distance = routes[0].summary.totalDistance / 1000; // km
+                        const time = routes[0].summary.totalTime / 60; // menit
+                        const hargaPerKm = 2500;
+                        const totalHarga = distance * hargaPerKm;
 
-                    // Tampilan informasi
-                    document.getElementById('distanceText').textContent = `${distance.toFixed(2)} km`;
-                    document.getElementById('timeText').textContent = `${estimasiWaktu} menit`;
-                    document.getElementById('priceText').textContent = `Rp ${totalHarga}`;
-                    
-                    // Tampilkan informasi
-                    document.getElementById('travelInfo').classList.remove('hidden');
-                    document.getElementById('orderButton').classList.remove('hidden');
+                        // Tampilan informasi
+                        document.getElementById('distanceText').textContent = `${distance.toFixed(2)} km`;
+                        document.getElementById('timeText').textContent = `${time.toFixed(0)} menit`;
+                        document.getElementById('priceText').textContent = `Rp ${totalHarga.toLocaleString('id-ID')}`;
+                        
+                        // Tampilkan informasi
+                        document.getElementById('travelInfo').classList.remove('hidden');
+                        document.getElementById('orderButton').classList.remove('hidden');
 
-                    // Sesuaikan tampilan peta
-                    map.fitBounds([startLatlng, endLatlng], {
-                        padding: [50, 50]
+                        // Sesuaikan tampilan peta
+                        map.fitBounds(routes[0].bounds, {
+                            padding: [50, 50]
+                        });
                     });
                 });
             });
