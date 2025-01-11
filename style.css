@@ -240,166 +240,111 @@ body {
     }
 
     .whatsapp-popup {
-        position: fixed;
-        bottom: -100%;
-        right: 20px;
-        width: 300px;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-        z-index: 9999;
-        /* Increased z-index */
-        opacity: 0;
-        transition: all 0.3s ease-in-out;
         display: none;
-        /* Initially hidden */
-    }
-
-    .whatsapp-popup.show {
-        bottom: 100px;
-        opacity: 1;
-        display: block;
-        /* Show when .show class is added */
-    }
-
-    .whatsapp-close {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        width: 25px;
-        height: 25px;
-        background: #e74c3c;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.2s;
-        z-index: 10000;
-        /* Ensure it's above other elements */
-    }
-
-    .whatsapp-close:hover {
-        background: #c0392b;
-    }
-
-    .whatsapp-header {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
         background: #25D366;
         color: white;
         padding: 15px;
-        border-radius: 12px 12px 0 0;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        max-width: 300px;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .whatsapp-popup.show {
+        display: block;
+    }
+
+    .whatsapp-header {
         display: flex;
         align-items: center;
-        gap: 10px;
+        margin-bottom: 10px;
     }
 
     .whatsapp-header i {
         font-size: 24px;
+        margin-right: 10px;
     }
 
-    .whatsapp-header h3 {
-        margin: 0;
+    .whatsapp-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
         font-size: 18px;
     }
 
     .whatsapp-message {
-        padding: 20px;
-        color: #333;
+        margin-bottom: 10px;
         font-size: 14px;
-        line-height: 1.5;
     }
 
     .whatsapp-buttons {
-        padding: 0 20px 20px;
         display: flex;
         gap: 10px;
     }
 
     .whatsapp-btn {
-        flex: 1;
-        padding: 10px;
+        padding: 8px 15px;
         border: none;
-        border-radius: 6px;
+        border-radius: 5px;
         cursor: pointer;
         font-weight: 500;
         transition: all 0.2s;
     }
 
     .whatsapp-btn.primary {
-        background: #25D366;
-        color: white;
-    }
-
-    .whatsapp-btn.primary:hover {
-        background: #1da851;
+        background: white;
+        color: #25D366;
     }
 
     .whatsapp-btn.secondary {
-        background: #e9ecef;
-        color: #495057;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
     }
 
-    .whatsapp-btn.secondary:hover {
-        background: #dee2e6;
+    .whatsapp-btn:hover {
+        transform: translateY(-2px);
     }
 
-    /* Floating WhatsApp Button */
+    @keyframes slideIn {
+        from {
+            transform: translateY(100px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Add floating WhatsApp button */
     .floating-whatsapp {
         position: fixed;
         bottom: 20px;
         right: 20px;
+        background: #25D366;
+        color: white;
         width: 60px;
         height: 60px;
-        background: #25D366;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 30px;
+        font-size: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         transition: all 0.2s;
-        z-index: 9998;
-        /* Just below popup but above other content */
     }
 
     .floating-whatsapp:hover {
         transform: scale(1.1);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
-
-    @keyframes bounce {
-
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-10px);
-        }
-    }
-
-    .floating-whatsapp i {
-        animation: bounce 2s infinite;
-    }
-
-    /* Media queries for desktop */
-    @media screen and (min-width: 1024px) {
-        .whatsapp-popup {
-            width: 350px;
-            /* Slightly wider on desktop */
-            right: 30px;
-        }
-
-        .floating-whatsapp {
-            width: 65px;
-            height: 65px;
-            right: 30px;
-            bottom: 30px;
-        }
-    }
+}
