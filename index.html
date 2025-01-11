@@ -52,222 +52,363 @@
     </script>
 
     <!-- External CSS -->
-    <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .app-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #FFD60A;
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 2px solid #000;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        #map {
+            height: 400px;
+            border-bottom: 2px solid #000;
+        }
+
+        .controls {
+            padding: 1.5rem;
+        }
+
+        .location-btn {
+            background: #00f5d4;
+            border: 2px solid #000;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            box-shadow: 4px 4px 0 #000;
+            transition: all 0.2s;
+        }
+
+        .search-container {
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #000;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .search-results {
+            position: absolute;
+            width: 100%;
+            background: white;
+            border: 2px solid #000;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        .search-result-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-result-item:hover {
+            background: #f5f5f5;
+        }
+
+        .location-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #000;
+        }
+
+        .location-btn:active {
+            transform: translate(0, 0);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .location-display {
+            background: #f8f9fa;
+            border: 2px solid #000;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .coordinate-box {
+            background: white;
+            border: 2px solid #000;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-container {
+            background: #ffd60a;
+            border: 2px solid #000;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .contact-btn {
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+
+        .contact-btn:hover {
+            transform: scale(1.02);
+            background: #222;
+        }
+
+        .promo-timer {
+            background: #ff4d4d;
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border: 2px solid #000;
+            animation: pulse 1s infinite;
+        }
+
+        .price-display {
+            margin: 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .discount-badge {
+            background: #ff4d4d;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+            font-size: 0.8em;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pickup-options {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .option-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: 2px solid #000;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn.active {
+            background: #00f5d4;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0;
+                margin: 0;
+            }
+
+            .app-container {
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            #map {
+                height: 300px;
+            }
+
+            .controls {
+                padding: 1rem;
+            }
+
+            .whatsapp-popup {
+                display: none;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #25D366;
+                color: white;
+                padding: 15px;
+                border-radius: 15px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                z-index: 1000;
+                max-width: 300px;
+                animation: slideIn 0.3s ease-out;
+            }
+
+            .whatsapp-popup.show {
+                display: block;
+            }
+
+            .whatsapp-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            .whatsapp-header i {
+                font-size: 24px;
+                margin-right: 10px;
+            }
+
+            .whatsapp-close {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                font-size: 18px;
+            }
+
+            .whatsapp-message {
+                margin-bottom: 10px;
+                font-size: 14px;
+            }
+
+            .whatsapp-buttons {
+                display: flex;
+                gap: 10px;
+            }
+
+            .whatsapp-btn {
+                padding: 8px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: 500;
+                transition: all 0.2s;
+            }
+
+            .whatsapp-btn.primary {
+                background: white;
+                color: #25D366;
+            }
+
+            .whatsapp-btn.secondary {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+
+            .whatsapp-btn:hover {
+                transform: translateY(-2px);
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateY(100px);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            /* Add floating WhatsApp button */
+            .floating-whatsapp {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #25D366;
+                color: white;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .floating-whatsapp:hover {
+                transform: scale(1.1);
+            }
+        }
+    </style>
 </head>
-<style>
-    /* Base Styles */
-    :root {
-        --whatsapp-green: #25D366;
-        --whatsapp-dark-green: #1da851;
-        --popup-width-mobile: 300px;
-        --popup-width-desktop: 400px;
-        --floating-btn-size-mobile: 60px;
-        --floating-btn-size-desktop: 70px;
-    }
-
-    /* WhatsApp Popup */
-    .whatsapp-popup {
-        position: fixed;
-        bottom: -100%;
-        right: 20px;
-        width: var(--popup-width-mobile);
-        background: #fff;
-        border-radius: 15px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        z-index: 9999;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.4s ease-in-out;
-    }
-
-    .whatsapp-popup.show {
-        bottom: calc(var(--floating-btn-size-mobile) + 30px);
-        opacity: 1;
-        visibility: visible;
-    }
-
-    /* Close Button */
-    .whatsapp-close {
-        position: absolute;
-        top: -15px;
-        right: -15px;
-        width: 30px;
-        height: 30px;
-        background: #e74c3c;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.3s;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .whatsapp-close:hover {
-        background: #c0392b;
-    }
-
-    /* Header */
-    .whatsapp-header {
-        background: var(--whatsapp-green);
-        color: white;
-        padding: 20px;
-        border-radius: 15px 15px 0 0;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .whatsapp-header i {
-        font-size: 28px;
-    }
-
-    .whatsapp-header h3 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 600;
-    }
-
-    /* Message */
-    .whatsapp-message {
-        padding: 25px;
-        color: #333;
-        font-size: 16px;
-        line-height: 1.6;
-    }
-
-    /* Buttons Container */
-    .whatsapp-buttons {
-        padding: 0 25px 25px;
-        display: flex;
-        gap: 15px;
-    }
-
-    /* Button Styles */
-    .whatsapp-btn {
-        flex: 1;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: 500;
-        transition: all 0.3s;
-    }
-
-    .whatsapp-btn.primary {
-        background: var(--whatsapp-green);
-        color: white;
-    }
-
-    .whatsapp-btn.primary:hover {
-        background: var(--whatsapp-dark-green);
-        transform: translateY(-2px);
-    }
-
-    .whatsapp-btn.secondary {
-        background: #f1f3f5;
-        color: #495057;
-    }
-
-    .whatsapp-btn.secondary:hover {
-        background: #e9ecef;
-        transform: translateY(-2px);
-    }
-
-    /* Floating Button */
-    .floating-whatsapp {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: var(--floating-btn-size-mobile);
-        height: var(--floating-btn-size-mobile);
-        background: var(--whatsapp-green);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 32px;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s;
-        z-index: 9998;
-    }
-
-    .floating-whatsapp:hover {
-        transform: scale(1.1) translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    }
-
-    .floating-whatsapp i {
-        animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-10px);
-        }
-    }
-
-    /* Desktop Styles */
-    @media screen and (min-width: 1024px) {
-        .whatsapp-popup {
-            width: var(--popup-width-desktop);
-            right: 30px;
-        }
-
-        .whatsapp-popup.show {
-            bottom: calc(var(--floating-btn-size-desktop) + 40px);
-        }
-
-        .floating-whatsapp {
-            width: var(--floating-btn-size-desktop);
-            height: var(--floating-btn-size-desktop);
-            right: 30px;
-            bottom: 30px;
-            font-size: 38px;
-        }
-
-        .whatsapp-header {
-            padding: 25px;
-        }
-
-        .whatsapp-header i {
-            font-size: 32px;
-        }
-
-        .whatsapp-header h3 {
-            font-size: 22px;
-        }
-
-        .whatsapp-message {
-            padding: 30px;
-            font-size: 18px;
-        }
-
-        .whatsapp-buttons {
-            padding: 0 30px 30px;
-        }
-
-        .whatsapp-btn {
-            padding: 15px 25px;
-            font-size: 18px;
-        }
-    }
-</style>
 
 <body>
     <div class="container">
@@ -344,7 +485,6 @@
             </div>
         </div>
     </div>
-    !-- WhatsApp Chat HTML -->
     <div class="whatsapp-popup" id="whatsapp-popup">
         <button class="whatsapp-close" onclick="closeWhatsAppPopup()">×</button>
         <div class="whatsapp-header">
@@ -360,23 +500,44 @@
         </div>
     </div>
 
-    <!-- Floating WhatsApp button -->
+    <!-- Add floating WhatsApp button -->
     <div class="floating-whatsapp" id="floating-whatsapp" onclick="showWhatsAppPopup()">
         <i class="fab fa-whatsapp"></i>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
-        // Global variables
+        function showWhatsAppPopup() {
+            document.getElementById('whatsapp-popup').classList.add('show');
+        }
+
+        function closeWhatsAppPopup() {
+            document.getElementById('whatsapp-popup').classList.remove('show');
+        }
+
+        function confirmWhatsApp() {
+            window.open('https://wa.me/6285155145788', '_blank');
+            closeWhatsAppPopup();
+        }
+
+        // Modify existing hubungiAdmin function
+        function hubungiAdmin() {
+            const price = document.getElementById('price').textContent;
+            const originalPrice = document.getElementById('original-price').textContent;
+            const pickupCoords = document.getElementById('pickup-coords').textContent.replace(/\s+/g, '');
+            const destinationName = document.getElementById('destination-coords').textContent;
+
+            const message = `kak saya mau anjem (antar jemput) dari https://maps.google.com/?q=${pickupCoords} ke ${destinationName}\nHarga awal: Rp ${originalPrice}\nSetelah diskon 20%: Rp ${price}`;
+
+            window.open(`https://wa.me/6285155145788?text=${encodeURIComponent(message)}`);
+        }
         let map;
         let markers = {};
         let route = null;
         let destinationDetails = null;
         let promoEndTime;
         let timerInterval;
-        let isPopupVisible = false;
-        let timer = null;
 
-        // Initialize map
+        // Inisialisasi peta
         function initMap() {
             map = L.map('map').setView([-6.588983449484304, 110.66654121864478], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -384,7 +545,6 @@
             }).addTo(map);
         }
 
-        // Show GPS option
         function showGPSOption() {
             document.getElementById('gps-option').style.display = 'block';
             document.getElementById('manual-option').style.display = 'none';
@@ -392,7 +552,6 @@
             document.querySelectorAll('.option-btn')[1].classList.remove('active');
         }
 
-        // Show manual option
         function showManualOption() {
             document.getElementById('gps-option').style.display = 'none';
             document.getElementById('manual-option').style.display = 'block';
@@ -400,15 +559,14 @@
             document.querySelectorAll('.option-btn')[1].classList.add('active');
         }
 
-        // Initialize promo timer
+        // Inisialisasi waktu promo
         function initPromoTimer() {
-            promoEndTime = new Date().getTime() + (60 * 60 * 1000); // 1 hour
+            promoEndTime = new Date().getTime() + (60 * 60 * 1000); // 1 jam
             updateTimer();
             timerInterval = setInterval(updateTimer, 1000);
             document.getElementById('promo-timer').style.display = 'block';
         }
 
-        // Update timer
         function updateTimer() {
             const now = new Date().getTime();
             const distance = promoEndTime - now;
@@ -427,7 +585,6 @@
                 `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        // Search pickup location
         async function searchPickupLocation(query) {
             if (query.length < 3) {
                 document.getElementById('pickup-search-results').style.display = 'none';
@@ -456,7 +613,6 @@
             }
         }
 
-        // Select pickup location
         function selectPickupLocation(location) {
             const coords = [location.lat, location.lon];
 
@@ -477,12 +633,13 @@
             document.getElementById('pickup-search').value = location.display_name;
             map.setView(coords, 16);
 
+
             if (markers['destination']) {
                 calculateRoute();
             }
         }
 
-        // Get pickup location via GPS
+        // Fungsi untuk mendapatkan lokasi jemput
         function getPickupLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -495,7 +652,7 @@
             }
         }
 
-        // Handle successful GPS position
+        // Callback sukses GPS
         function positionSuccess(position) {
             const { latitude, longitude } = position.coords;
             const location = [latitude, longitude];
@@ -522,11 +679,11 @@
             }
         }
 
-        // Handle GPS error
+        // Callback error GPS
         function positionError(error) {
             if (error && error.code === error.PERMISSION_DENIED) {
-                alert("Izin lokasi ditolak. Anda akan diarahkan ke pencarian manual.");
-                showManualOption();
+                alert("Izin lokasi ditolak.  Anda akan diarahkan ke pencarian manual.");
+                showManualOption(); // Langsung alihkan ke manual jika izin ditolak.
             } else {
                 let errorMessage = "Terjadi kesalahan dalam mengakses lokasi. Coba gunakan pencarian manual.";
                 if (error && error.code === error.TIMEOUT) {
@@ -535,9 +692,10 @@
                 alert(errorMessage);
                 showManualOption();
             }
+
         }
 
-        // Search destination location
+        // Fungsi pencarian lokasi
         async function searchLocation(query) {
             if (query.length < 3) {
                 document.getElementById('search-results').style.display = 'none';
@@ -557,7 +715,7 @@
                 data.forEach(result => {
                     const div = document.createElement('div');
                     div.className = 'search-result-item';
-                    div.textContent = result.display_name;
+                    div.textContent = `${result.display_name}`;
                     div.onclick = () => selectDestination(result);
                     resultsContainer.appendChild(div);
                 });
@@ -566,7 +724,7 @@
             }
         }
 
-        // Select destination
+        // Fungsi memilih lokasi tujuan
         function selectDestination(location) {
             const coords = [location.lat, location.lon];
             destinationDetails = {
@@ -586,7 +744,8 @@
             });
 
             markers['destination'] = L.marker(coords, { icon }).addTo(map);
-            document.getElementById('destination-coords').textContent = location.display_name;
+            document.getElementById('destination-coords').textContent =
+                `${location.display_name}`;
             document.getElementById('search-results').style.display = 'none';
             document.getElementById('destination-search').value = location.display_name;
 
@@ -595,7 +754,8 @@
             }
         }
 
-        // Calculate route and price
+
+        // Fungsi untuk menghitung rute dan jarak
         async function calculateRoute() {
             const pickup = markers['pickup'].getLatLng();
             const destination = markers['destination'].getLatLng();
@@ -621,8 +781,8 @@
 
                     const distance = (data.routes[0].distance / 1000).toFixed(2);
                     const basePrice = Math.ceil(distance * 1500);
-                    const inflatedPrice = Math.ceil(basePrice * 1.2); // Up 20%
-                    const finalPrice = Math.ceil(inflatedPrice * 0.8); // Discount 20%
+                    const inflatedPrice = Math.ceil(basePrice * 1.2); // Naik 20%
+                    const finalPrice = Math.ceil(inflatedPrice * 0.8); // Diskon 20%
 
                     document.getElementById('distance').textContent = distance;
                     document.getElementById('original-price').textContent = inflatedPrice.toLocaleString('id-ID');
@@ -636,124 +796,55 @@
                 alert('Gagal menghitung rute. Silakan coba lagi.');
             }
         }
+        function toggleWhatsAppBox() {
+            const box = document.getElementById('whatsappBox');
+            box.classList.toggle('show');
+        }
 
-        // WhatsApp Chat Functions
-        function showWhatsAppPopup() {
-            const popup = document.getElementById('whatsapp-popup');
-            const floatingBtn = document.getElementById('floating-whatsapp');
-
-            if (!isPopupVisible) {
-                floatingBtn.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    floatingBtn.style.transform = 'scale(1)';
-                }, 200);
-
-                popup.classList.add('show');
-                isPopupVisible = true;
-                startAutoHideTimer();
-
-                setTimeout(() => {
-                    document.addEventListener('click', handleClickOutside);
-                }, 100);
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendWhatsAppMessage();
             }
         }
 
-        function closeWhatsAppPopup() {
-            const popup = document.getElementById('whatsapp-popup');
+        function sendWhatsAppMessage() {
+            const input = document.getElementById('whatsappInput');
+            const message = input.value.trim();
 
-            if (isPopupVisible) {
-                popup.classList.remove('show');
-                isPopupVisible = false;
-                document.removeEventListener('click', handleClickOutside);
-                if (timer) clearTimeout(timer);
+            if (message) {
+                const whatsappNumber = '6282324159922';
+                const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+                window.open(url, '_blank');
+                input.value = '';
             }
         }
 
-        function handleClickOutside(event) {
-            const popup = document.getElementById('whatsapp-popup');
-            const floatingBtn = document.getElementById('floating-whatsapp');
+        document.addEventListener('DOMContentLoaded', function () {
+            const welcomeMessage = document.querySelector('.whatsapp-message');
+            welcomeMessage.style.opacity = '0';
+            setTimeout(() => {
+                welcomeMessage.style.opacity = '1';
+                welcomeMessage.style.transition = 'opacity 0.5s ease';
+            }, 500);
+        });
 
-            if (isPopupVisible && !popup.contains(event.target) && event.target !== floatingBtn) {
-                closeWhatsAppPopup();
-            }
-        }
-
-        function startAutoHideTimer() {
-            if (timer) clearTimeout(timer);
-            timer = setTimeout(() => {
-                closeWhatsAppPopup();
-            }, 10000);
-        }
-
-        function resetAutoHideTimer() {
-            if (timer) clearTimeout(timer);
-            if (isPopupVisible) {
-                startAutoHideTimer();
-            }
-        }
-
-        function confirmWhatsApp() {
+        // Fungsi untuk menghubungi admin
+        function hubungiAdmin() {
             const price = document.getElementById('price').textContent;
             const originalPrice = document.getElementById('original-price').textContent;
-            const pickupCoords = document.getElementById('pickup-coords').textContent;
-            const destinationCoords = document.getElementById('destination-coords').textContent;
+            const pickupCoords = document.getElementById('pickup-coords').textContent.replace(/\s+/g, '');
+            const destinationName = document.getElementById('destination-coords').textContent;
 
-            const message = `kak saya mau anjem (antar jemput) dari ${pickupCoords} ke ${destinationCoords}\nHarga awal: Rp ${originalPrice}\nSetelah diskon 20%: Rp ${price}`;
+            const message = `kak saya mau anjem (antar jemput) dari ${pickupCoords} ke ${destinationName}\nHarga awal: Rp ${originalPrice}\nSetelah diskon 20%: Rp ${price}`;
 
-            window.open(`https://wa.me/6285155145788?text=${encodeURIComponent(message)}`, '_blank');
-            closeWhatsAppPopup();
+            window.open(`https://wa.me/6282324159922?text=${encodeURIComponent(message)}`);
         }
 
-        // Initialize everything on page load
+        // Inisialisasi saat halaman dimuat
         window.onload = function () {
             initMap();
             initPromoTimer();
-
-            // Initialize WhatsApp features
-            const popup = document.getElementById('whatsapp-popup');
-            const floatingBtn = document.getElementById('floating-whatsapp');
-
-            if (popup && floatingBtn) {
-                popup.addEventListener('mouseenter', resetAutoHideTimer);
-                popup.addEventListener('mousemove', resetAutoHideTimer);
-                popup.addEventListener('touchstart', resetAutoHideTimer);
-
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && isPopupVisible) {
-                        closeWhatsAppPopup();
-                    }
-                });
-
-                // Auto show popup after 5 seconds
-                setTimeout(() => {
-                    showWhatsAppPopup();
-                }, 5000);
-
-                // Add periodic animation to floating button
-                setInterval(() => {
-                    if (!isPopupVisible) {
-                        floatingBtn.style.transform = 'scale(1.1)';
-                        setTimeout(() => {
-                            floatingBtn.style.transform = 'scale(1)';
-                        }, 200);
-                    }
-                }, 10000);
-            }
         };
-
-        // Handle visibility change
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && isPopupVisible) {
-                closeWhatsAppPopup();
-            }
-        });
-
-        // Handle mobile back button
-        window.addEventListener('popstate', function () {
-            if (isPopupVisible) {
-                closeWhatsAppPopup();
-            }
-        });
     </script>
 </body>
 
