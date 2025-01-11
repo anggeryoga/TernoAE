@@ -66,13 +66,14 @@
         border-radius: 10px;
         box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
         width: 300px;
-        transform: translateY(120%);
-        transition: transform 0.3s ease;
+        display: none;
+        /* Hide by default */
         z-index: 1000;
     }
 
     .whatsapp-box.show {
-        transform: translateY(0);
+        display: block;
+        /* Show when toggle is clicked */
     }
 
     .whatsapp-header {
@@ -163,6 +164,7 @@
         }
     }
 </style>
+
 <body>
     <div class="container">
         <div class="app-container">
@@ -238,29 +240,28 @@
             </div>
         </div>
     </div>
-        <!-- WhatsApp Toggle Button -->
-        <div class="whatsapp-toggle" onclick="toggleWhatsAppBox()">
-            <i class="fab fa-whatsapp"></i>
+    <div class="whatsapp-toggle" onclick="toggleWhatsAppBox()">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+
+    <!-- WhatsApp Chat Box -->
+    <div class="whatsapp-box" id="whatsappBox">
+        <div class="whatsapp-header">
+            <h4>Customer Service</h4>
+            <button class="close-btn" onclick="toggleWhatsAppBox()">×</button>
         </div>
-    
-        <!-- WhatsApp Chat Box -->
-        <div class="whatsapp-box" id="whatsappBox">
-            <div class="whatsapp-header">
-                <h4>Customer Service</h4>
-                <button class="close-btn" onclick="toggleWhatsAppBox()">×</button>
+        <div class="whatsapp-body">
+            <div class="whatsapp-message">
+                Halo! 👋 Silakan tinggalkan pesan, kami akan segera membalas.
             </div>
-            <div class="whatsapp-body">
-                <div class="whatsapp-message">
-                    Halo! 👋 Silakan tinggalkan pesan, kami akan segera membalas.
-                </div>
-                <div class="whatsapp-input">
-                    <input type="text" id="whatsappInput" placeholder="Ketik pesan..." onkeypress="handleKeyPress(event)">
-                    <button onclick="sendWhatsAppMessage()">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
+            <div class="whatsapp-input">
+                <input type="text" id="whatsappInput" placeholder="Ketik pesan..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendWhatsAppMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
