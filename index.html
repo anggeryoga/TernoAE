@@ -154,18 +154,47 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
+        // Fungsi untuk menampilkan popup WhatsApp
         function showWhatsAppPopup() {
-            document.getElementById('whatsapp-popup').classList.add('show');
+            const popup = document.getElementById('whatsapp-popup');
+            if (popup) {
+                popup.classList.add('show');
+                console.log('Showing WhatsApp popup'); // Debug log
+            }
         }
 
+        // Fungsi untuk menutup popup WhatsApp
         function closeWhatsAppPopup() {
-            document.getElementById('whatsapp-popup').classList.remove('show');
+            const popup = document.getElementById('whatsapp-popup');
+            if (popup) {
+                popup.classList.remove('show');
+                console.log('Closing WhatsApp popup'); // Debug log
+            }
         }
 
+        // Fungsi untuk konfirmasi WhatsApp
         function confirmWhatsApp() {
             window.open('https://wa.me/6285155145788', '_blank');
             closeWhatsAppPopup();
         }
+
+        // Tambahkan event listener saat dokumen dimuat
+        document.addEventListener('DOMContentLoaded', function () {
+            // Debug log untuk memastikan script berjalan
+            console.log('WhatsApp script loaded');
+
+            // Inisialisasi floating button
+            const floatingButton = document.getElementById('floating-whatsapp');
+            if (floatingButton) {
+                floatingButton.style.display = 'flex';
+            }
+
+            // Inisialisasi popup
+            const popup = document.getElementById('whatsapp-popup');
+            if (popup) {
+                popup.style.display = 'none';
+            }
+        });
 
         // Modify existing hubungiAdmin function
         function hubungiAdmin() {
